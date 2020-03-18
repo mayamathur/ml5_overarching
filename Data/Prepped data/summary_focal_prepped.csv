@@ -1,0 +1,102 @@
+"Study","Site","Version","ES.Metric","Value","N","Reverse","Label","yi.f","vi.f"
+"Albarracin S7","Ashland University","RP:P","eta sq",0.334579527168056,36,"no","Albarracin S7 RP:P",0.334579527168056,0.0225326976639078
+"Albarracin S7","Grand Valley State University","RP:P","eta sq",0.0306074664093584,182,"no","Albarracin S7 RP:P",0.0306074664093584,0.0055145151581552
+"Albarracin S7","McDaniel College","RP:P","eta sq",0.317471195543785,26,"no","Albarracin S7 RP:P",0.317471195543785,0.0323432917152385
+"Albarracin S7","Michigan State University","RP:P","eta sq",0.0694691442296506,352,"no","Albarracin S7 RP:P",0.0694691442296506,0.00282157084304623
+"Crosby","Edinburgh","RP:P","pseudo R2",0.167332005306815,43,"no","Crosby RP:P",0.167332005306815,0.0224948571428571
+"Crosby","Occidental","RP:P","pseudo R2",0.2,47,"no","Crosby RP:P",0.2,0.0200347826086957
+"Crosby","Stirling","RP:P","pseudo R2",0.0836660026534076,50,"no","Crosby RP:P",0.0836660026534076,0.0201234489795918
+"Shnabel","Murray State","RP:P","pseudo R2",0.0706285707061951,69,"no","Shnabel RP:P",0.0706285707061951,0.0145595307953629
+"Shnabel","Ithica","RP:P","pseudo R2",0.00392428337406972,159,"no","Shnabel RP:P",0.00392428337406972,0.00632891898884278
+"Shnabel","Williamette","RP:P","pseudo R2",0.154440700594112,110,"no","Shnabel RP:P",0.154440700594112,0.00874188123453876
+"Shnabel","Western Kentucky","RP:P","pseudo R2",0.0814838143437088,181,"no","Shnabel RP:P",0.0814838143437088,0.00548202700248617
+"Shnabel","UC Riverside","RP:P","pseudo R2",0.0335896710314346,176,"no","Shnabel RP:P",0.0335896710314346,0.00570139851990952
+"Shnabel","University of Belgrade","RP:P","pseudo R2",0.0231563166328326,201,"no","Shnabel RP:P",0.0231563166328326,0.00499463928763263
+"Albarracin S7","Brigham Young University","Revised","eta sq",0.138963016662708,33,"no","Albarracin S7 Revised",0.138963016662708,0.0300547332470912
+"Albarracin S7","McDaniel College","Revised","eta sq",0.202194609225864,17,"no","Albarracin S7 Revised",0.202194609225864,0.0574941294930422
+"Albarracin S7","Southern Illinois University","Revised","eta sq",0.196251649674595,52,"no","Albarracin S7 Revised",0.196251649674595,0.0181265482918899
+"Crosby","Edinburgh","Revised","pseudo R2",0.0707106781186548,45,"no","Crosby Revised",0.0707106781186548,0.0225005681818182
+"Crosby","Occidental","Revised","pseudo R2",0.1,41,"no","Crosby Revised",0.1,0.0245025
+"Crosby","Stirling","Revised","pseudo R2",0.228035085019828,50,"no","Crosby Revised",0.228035085019828,0.0183408979591837
+"Shnabel","Texas A&M","Revised","pseudo R2",0.0655710225633244,187,"no","Shnabel Revised",0.0655710225633244,0.00533021165703008
+"Shnabel","Murray State","Revised","pseudo R2",0.0920687351927895,71,"no","Shnabel Revised",0.0920687351927895,0.0140445507089876
+"Shnabel","Ithica","Revised","pseudo R2",0.186997807473778,165,"no","Shnabel Revised",0.186997807473778,0.00567857569275922
+"Shnabel","St. Josephs","Revised","pseudo R2",0.02565665605647,280,"no","Shnabel Revised",0.02565665605647,0.00357951220541754
+"Shnabel","Williamette","Revised","pseudo R2",0.178056844855793,111,"no","Shnabel Revised",0.178056844855793,0.00852360617121798
+"Shnabel","Western Kentucky","Revised","pseudo R2",0.0591487024371626,183,"no","Shnabel Revised",0.0591487024371626,0.00545612693398378
+"Shnabel","UC Riverside","Revised","pseudo R2",0.0459741666591141,180,"no","Shnabel Revised",0.0459741666591141,0.00556300122573415
+"Shnabel","University of Belgrade","Revised","pseudo R2",0.119662232972647,199,"no","Shnabel Revised",0.119662232972647,0.00490690371309547
+"Risen","MTurk","RP:P","g",-0.0425223229623569,2811,"no","Risen RP:P",-0.0425223229623569,0.000354586111565402
+"van Dijk","Boston College","RP:P","d",0.162798782993202,60,"no","van Dijk RP:P",0.162798782993202,0.0160626363566468
+"van Dijk","Eotvos Lorand University","RP:P","d",-0.119145220618431,78,"no","van Dijk RP:P",-0.119145220618431,0.0126209136026131
+"van Dijk","University of Goettingen","RP:P","d",0.13378637625248,65,"no","van Dijk RP:P",0.13378637625248,0.0150706684047182
+"van Dijk","Maria Curie-Sklodowska University","RP:P","d",0.00499993750117185,60,"no","van Dijk RP:P",0.00499993750117185,0.0169483051165244
+"van Dijk","Universidad de los Andes","RP:P","d",0.0499376169438922,107,"no","van Dijk RP:P",0.0499376169438922,0.00938696875183706
+"van Dijk","Wharton School","RP:P","d",0.196116135138184,66,"no","van Dijk RP:P",0.196116135138184,0.0142239417387346
+"Vohs","Miami University","RP:P","d",0.0149983127847122,74,"no","Vohs RP:P",0.0149983127847122,0.0136924678332801
+"Vohs","Basel","RP:P","d",0.18666064582327,78,"no","Vohs RP:P",0.18666064582327,0.0120977868217208
+"Vohs","Budapest","RP:P","d",-0.00499993750117185,58,"no","Vohs RP:P",-0.00499993750117185,0.017542982489034
+"Vohs","Dortmund","RP:P","d",-0.0648631210826801,69,"no","Vohs RP:P",-0.0648631210826801,0.0145824007615386
+"Risen","University of Pennsylvania ","Revised","g",0.0454200859263954,311,"no","Risen Revised",0.0454200859263954,0.00321251060481519
+"Risen","Berkeley","Revised","g",-0.111924550627213,177,"no","Risen Revised",-0.111924550627213,0.00554035635394491
+"Risen","Stanford","Revised","g",-0.0494899571573642,67,"no","Risen Revised",-0.0494899571573642,0.015077386168718
+"Risen","University of Virginia","Revised","g",0.0233913295394927,146,"no","Risen Revised",0.0233913295394927,0.00688900683298328
+"van Dijk","Boston College","Revised","d",0.0846945914398115,26,"no","van Dijk Revised",0.0846945914398115,0.0394282042713731
+"van Dijk","University of Goettingen","Revised","d",0.109340479152898,31,"no","van Dijk Revised",0.109340479152898,0.0325410749800288
+"van Dijk","Maria Curie-Sklodowska University","Revised","d",0.278524450245832,27,"no","van Dijk Revised",0.278524450245832,0.032725626028512
+"van Dijk","Universidad de los Andes","Revised","d",0.379353281135444,35,"no","van Dijk Revised",0.379353281135444,0.0215556456208869
+"Vohs","Miami University","Revised","d",0.0399680383488716,72,"no","Vohs Revised",0.0399680383488716,0.0140395445584325
+"Vohs","Winchester","Revised","d",0.0449545065814817,72,"no","Vohs Revised",0.0449545065814817,0.014027637587941
+"Vohs","Basel","Revised","d",0.119145220618431,71,"no","Vohs Revised",0.119145220618431,0.0138830049628744
+"Vohs","Budapest","Revised","d",0.260665852290765,57,"no","Vohs Revised",0.260665852290765,0.0155129174841473
+"Vohs","Dortmund","Revised","d",-0.200823620215616,70,"no","Vohs Revised",-0.200823620215616,0.0133473371916721
+"Albarracin S5","MTurk","RP:P","r",0.04,580,"no","Albarracin S5 RP:P",0.04,0.00172159336787565
+"Forster","University of Presov","RP:P","rp",0.07,97,"no","Forster RP:P",0.07,0.0103148334375
+"Forster","Nova Southeastern University","RP:P","rp",0.06,97,"no","Forster RP:P",0.06,0.0103418016666667
+"Forster","Kozminski University","RP:P","rp",0.05,77,"no","Forster RP:P",0.05,0.0130921875
+"Forster","University of Kassel","RP:P","rp",0.07,110,"no","Forster RP:P",0.07,0.00908462394495413
+"Forster","Hofstra University","RP:P","rp",0.1,56,"no","Forster RP:P",0.1,0.01782
+"Forster","Universidade de Fortaleza","RP:P","rp",0.08,111,"no","Forster RP:P",0.08,0.00897491781818182
+"Forster","Fort Lewis College","RP:P","rp",0.04,119,"no","Forster RP:P",0.04,0.0084474793220339
+"Forster","Otto Friedrich Universitaet Bamberg","RP:P","rp",0.07,69,"no","Forster RP:P",0.07,0.0145621177941176
+"LoBue","University of Belgrade","RP:P","r",-0.00266,57,"no","LoBue RP:P",-0.00266,0.0178568901580369
+"LoBue","University of Nis","RP:P","r",0.145,104,"no","LoBue RP:P",0.145,0.00930477719053398
+"LoBue","Layola Marymount University","RP:P","r",-0.148,57,"no","LoBue RP:P",-0.148,0.017083424736
+"LoBue","University of Novi Sad","RP:P","r",-0.041,68,"no","LoBue RP:P",-0.041,0.0148752362053881
+"Payne","University of Genova","RP:P","r",-0.021,135,"no","Payne RP:P",-0.021,0.00745610592896269
+"Payne","University of Milan-Bicocca","RP:P","r",-0.075,136,"no","Payne RP:P",-0.075,0.00732430844907407
+"Payne","University of Padova","RP:P","r",0.134,139,"no","Payne RP:P",0.134,0.0069884812893913
+"Payne","University of Rome Sapienza","RP:P","r",0.141,135,"no","Payne RP:P",0.141,0.00716890488179851
+"Albarracin S5","Ashland University","Revised","r",0.02,81,"no","Albarracin S5 Revised",0.02,0.012490002
+"Albarracin S5","Erasmus","Revised","r",0.06,146,"no","Albarracin S5 Revised",0.06,0.00684698593103448
+"Albarracin S5","Ghent","Revised","r",0.12,86,"no","Albarracin S5 Revised",0.12,0.0114283218823529
+"Albarracin S5","Illinois","Revised","r",0.25,81,"no","Albarracin S5 Revised",0.25,0.010986328125
+"Albarracin S5","Oregon","Revised","r",0.05,174,"no","Albarracin S5 Revised",0.05,0.00575148121387283
+"Albarracin S5","Queens","Revised","r",0.06,100,"no","Albarracin S5 Revised",0.06,0.0100284137373737
+"Albarracin S5","Toronto","Revised","r",0.06,121,"no","Albarracin S5 Revised",0.06,0.00827344133333333
+"Albarracin S5","Wesleyan","Revised","r",0.15,95,"no","Albarracin S5 Revised",0.15,0.010164960106383
+"Forster","University of Presov","Revised","rp",0.2,100,"no","Forster Revised",0.2,0.00930909090909091
+"Forster","Nova Southeastern University","Revised","rp",0.14,81,"no","Forster Revised",0.14,0.012014802
+"Forster","Kozminski University","Revised","rp",0.03,95,"no","Forster Revised",0.03,0.0106191575531915
+"Forster","University of Kassel","Revised","rp",0.09,120,"no","Forster Revised",0.09,0.00826777823529412
+"Forster","Hofstra University","Revised","rp",0.22,47,"no","Forster Revised",0.22,0.019685707826087
+"Forster","Universidade de Fortaleza","Revised","rp",0.06,97,"no","Forster Revised",0.06,0.0103418016666667
+"Forster","Fort Lewis College","Revised","rp",0.11,111,"no","Forster Revised",0.11,0.00887224009090909
+"Forster","Otto Friedrich Universitaet Bamberg","Revised","rp",0.15,69,"no","Forster Revised",0.15,0.0140515625
+"LoBue","University of Belgrade","Revised","r",0.0803,56,"no","LoBue Revised",0.0803,0.0179480981429936
+"LoBue","University of Nis","Revised","r",6.45e-08,80,"no","LoBue Revised",6.45e-08,0.0126582278481012
+"LoBue","Layola Marymount University","Revised","r",0.0158,57,"no","LoBue Revised",0.0158,0.0178482282557166
+"LoBue","University of Novi Sad","Revised","r",0.0608,66,"no","LoBue Revised",0.0608,0.0152710828484198
+"Payne","Pacific Lutheran University","Revised","r",-0.268,146,"no","Payne Revised",-0.268,0.00594145301362759
+"Payne","University of Central Florida","Revised","r",-0.363,106,"no","Payne Revised",-0.363,0.00717928637486667
+"Payne","University of Virginia","Revised","r",0.063,160,"no","Payne Revised",0.063,0.00623948272302516
+"Payne","Virginia Commonwealth University","Revised","r",-0.076,146,"no","Payne Revised",-0.076,0.0068171128425931
+"Albarracin S7","Brigham Young University","RP:P","eta sq",-0.365123321632568,51,"yes","Albarracin S7 RP:P",-0.365123321632568,0.015022856397804
+"Albarracin S7","Southern Illinois University","RP:P","eta sq",-0.108994697118713,57,"yes","Albarracin S7 RP:P",-0.108994697118713,0.0174353829052404
+"Albarracin S7","University of Texas at Dallas","RP:P","eta sq",-0.0422300011839924,174,"yes","Albarracin S7 RP:P",-0.0422300011839924,0.00575974817583386
+"Shnabel","Texas A&M","RP:P","pseudo R2",-0.0829374342501623,186,"yes","Shnabel RP:P",-0.0829374342501623,0.00533129772640859
+"Shnabel","St. Josephs","RP:P","pseudo R2",-0.011943408223786,279,"yes","Shnabel RP:P",-0.011943408223786,0.00359609615232948
+"Albarracin S7","Ashland University","Revised","eta sq",-0.182188726325204,46,"yes","Albarracin S7 Revised",-0.182188726325204,0.0207714731879472
+"Albarracin S7","Grand Valley State University","Revised","eta sq",-0.157388500215232,167,"yes","Albarracin S7 Revised",-0.157388500215232,0.00572934535769217
+"Albarracin S7","Michigan State University","Revised","eta sq",-0.0704645158927527,328,"yes","Albarracin S7 Revised",-0.0704645158927527,0.0030278108797789
+"Albarracin S7","University of Texas at Dallas","Revised","eta sq",-0.100321682601519,165,"yes","Albarracin S7 Revised",-0.100321682601519,0.00597544154239338

@@ -1,0 +1,25 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1584560185706.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "3210470946",
+    "id" : "9414766D",
+    "lastKnownWriteTime" : 1584562780,
+    "last_content_update" : 1584562780044,
+    "path" : "~/Dropbox/Personal computer/Independent studies/Many Labs 5 (ML5)/Charlie's overarching manuscript/MM analyses for ML5 overarching (git)/Code/helper.R",
+    "project_path" : "Code/helper.R",
+    "properties" : {
+        "cursorPosition" : "198,2",
+        "scrollLine" : "169"
+    },
+    "read_only" : false,
+    "read_only_alternatives" : [
+    ],
+    "relative_order" : 7,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}
