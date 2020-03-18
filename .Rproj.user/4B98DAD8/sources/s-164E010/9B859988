@@ -12,16 +12,16 @@
     "path" : null,
     "project_path" : null,
     "properties" : {
-        "cacheKey" : "63DFF98",
+        "cacheKey" : "B548B138",
         "caption" : "t",
-        "contentUrl" : "grid_resource/gridviewer.html?env=&obj=t&cache_key=63DFF98",
+        "contentUrl" : "grid_resource/gridviewer.html?env=&obj=t&cache_key=B548B138",
         "displayedObservations" : "3",
         "environment" : "",
         "expression" : "t",
         "object" : "t",
         "preview" : "0",
         "totalObservations" : "3",
-        "variables" : "8"
+        "variables" : "9"
     },
     "read_only" : false,
     "read_only_alternatives" : [

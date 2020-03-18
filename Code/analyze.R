@@ -116,15 +116,16 @@ resE$subset = unlist( lapply( X = resE$Meta,
 
 # summary table by subset
 t = resE %>% group_by(subset) %>%
-  summarise( k = k[1],
+  summarise( k.reps = sum(k),
+             n.studies = n(),
              Tau.mn = mean(Tau),
-             Perc.Tau.GT0 = round( 100 * mean(Tau>0), digits ),
-             Phat0.mn = round( mean(`Percent above 0 unrounded`), digits ),
-             Phat10.mn = round( mean(`Percent above 0.1 unrounded`), digits ),
-             Phat20.mn = round( mean(`Percent above 0.2 unrounded`), digits ),
+             Perc.Tau.GT0 = round( 100 * mean(Tau>0), 0 ),
+             Phat0.mn = round( mean(`Percent above 0 unrounded`), 0 ),
+             Phat10.mn = round( mean(`Percent above 0.1 unrounded`), 0 ),
+             Phat20.mn = round( mean(`Percent above 0.2 unrounded`), 0 ),
              
              Porig.mn = round( mean(Porig.unrounded), digits ) )
-
+View(t)
 setwd(results.dir)
 
 

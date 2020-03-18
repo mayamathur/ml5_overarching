@@ -116,7 +116,8 @@ resE$subset = unlist( lapply( X = resE$Meta,
 
 # summary table by subset
 t = resE %>% group_by(subset) %>%
-  summarise( k = k[1],
+  summarise( k.reps = sum(k),
+             n.studies = n(),
              Tau.mn = mean(Tau),
              Perc.Tau.GT0 = round( 100 * mean(Tau>0), 0 ),
              Phat0.mn = round( mean(`Percent above 0 unrounded`), 0 ),
