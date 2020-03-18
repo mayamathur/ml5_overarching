@@ -5,15 +5,15 @@
     "dirty" : false,
     "encoding" : "UTF-8",
     "folds" : "",
-    "hash" : "4113725850",
+    "hash" : "0",
     "id" : "9414766D",
-    "lastKnownWriteTime" : 1584566231,
-    "last_content_update" : 1584566231913,
+    "lastKnownWriteTime" : 1584566785,
+    "last_content_update" : 1584566785255,
     "path" : "~/Dropbox/Personal computer/Independent studies/Many Labs 5 (ML5)/Charlie's overarching manuscript/MM analyses for ML5 overarching (git)/Code/helper.R",
     "project_path" : "Code/helper.R",
     "properties" : {
-        "cursorPosition" : "132,4",
-        "scrollLine" : "122"
+        "cursorPosition" : "214,52",
+        "scrollLine" : "209"
     },
     "read_only" : false,
     "read_only_alternatives" : [

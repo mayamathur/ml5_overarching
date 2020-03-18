@@ -1,7 +1,10 @@
 
+###################################### PRELIMINARIES ######################################
+
 prepped.data.dir = "~/Dropbox/Personal computer/Independent studies/Many Labs 5 (ML5)/Charlie's overarching manuscript/MM analyses for ML5 overarching (git)/Data/Prepped data"
 raw.data.dir = "~/Dropbox/Personal computer/Independent studies/Many Labs 5 (ML5)/Charlie's overarching manuscript/MM analyses for ML5 overarching (git)/Data/Raw data from Charlie"
 code.dir = "~/Dropbox/Personal computer/Independent studies/Many Labs 5 (ML5)/Charlie's overarching manuscript/MM analyses for ML5 overarching (git)/Code"
+results.dir = "~/Dropbox/Personal computer/Independent studies/Many Labs 5 (ML5)/Charlie's overarching manuscript/MM analyses for ML5 overarching (git)/Results from R"
 
 setwd(code.dir)
 source("helper.R")
@@ -46,8 +49,10 @@ df %>% group_by(Study, Version) %>%
 rm("resE")
 # make all the subsets to analyze
 studies = unique(df$Study)
-ql = c(0, MetaUtility::r_to_z(.10) )
-boot.reps = 500  # ~~~ INCREASE LATER
+ql = c(0,
+       MetaUtility::r_to_z(.10),
+       MetaUtility::r_to_z(.20) )
+boot.reps = 2000 
 digits = 2
 z.to.r = TRUE
 
@@ -89,5 +94,39 @@ for( i in studies ) {
 }
 
 View(resE)
+
+# save results
+setwd(results.dir)
+write.csv(x = resE,
+          file = "results_table_full.csv",
+          row.names = FALSE)
+
+# pretty version without extra columns
+temp = resE[ , !grepl( pattern = "unrounded", names(resE) ) ]
+write.csv(x = temp,
+          file = "results_table_pretty.csv",
+          row.names = FALSE)
+
+
+###################################### SUMMARY STATS ######################################
+
+# add variable for which group the estimate is in
+resE$subset = unlist( lapply( X = resE$Meta,
+                              FUN = function(x) strsplit( as.character(x), ", " )[[1]][[2]] ) )
+
+# summary table by subset
+t = resE %>% group_by(subset) %>%
+  summarise( k = k[1],
+             Tau.mn = mean(Tau),
+             Perc.Tau.GT0 = round( 100 * mean(Tau>0), 0 ),
+             Phat0.mn = round( mean(`Percent above 0 unrounded`), 0 ),
+             Phat10.mn = round( mean(`Percent above 0.1 unrounded`), 0 ),
+             Phat20.mn = round( mean(`Percent above 0.2 unrounded`), 0 ),
+             
+             Porig.mn = round( mean(Porig.unrounded), digits ) )
+View(t)
+setwd(results.dir)
+
+
 
 
