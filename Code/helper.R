@@ -13,17 +13,17 @@ analyze_one_meta = function( dat,
                              n.tests=1,
                              digits = 2) {
   
-  #~~~ TEST ONLY:
-  dat = df %>% filter( Study == "Albarracin S7" )
-  yi.name = "yi.f"
-  vi.name = "vi.f"
-  meta.name = "Forster all"
-  ql = c(0, MetaUtility::r_to_z(.10) )
-  boot.reps = 500
-  n.tests = 1
-  digits = 2
-  z.to.r = TRUE
-  # ~~~
+  # #~~~ TEST ONLY:
+  # dat = df %>% filter( Study == "Albarracin S7" )
+  # yi.name = "yi.f"
+  # vi.name = "vi.f"
+  # meta.name = "Forster all"
+  # ql = c(0, MetaUtility::r_to_z(.10) )
+  # boot.reps = 500
+  # n.tests = 1
+  # digits = 2
+  # z.to.r = TRUE
+  # # ~~~
   
   dat$yi = dat[[yi.name]]
   dat$vyi = dat[[vi.name]]
@@ -56,6 +56,7 @@ analyze_one_meta = function( dat,
   mu.hi = meta$ci.ub
   mu.se = meta$se
   mu.pval = meta$pval
+  k = nrow(dat)
   
   ##### NPPhat #####
   if ( t2 > 0 ) {
@@ -65,8 +66,8 @@ analyze_one_meta = function( dat,
                        # get new ensemble estimates for this subset
                        # yi and vyi aren't using yi.name and vi.name intentionally 
                        #  since these are newly created variables
-                       ens = my_ens( yi = dat$yi, 
-                                     sei = sqrt(dat$vyi) )
+                       ens = MetaUtility::calib_ests( yi = dat$yi, 
+                                      sei = sqrt(dat$vyi) )
                        
                        # set tail based on sign of q
                        if (q >= 0) tail = "above" else tail = "below"
@@ -85,7 +86,7 @@ analyze_one_meta = function( dat,
                                                 
                                                 b = original[indices,]
                                                 
-                                                ens.b = my_ens( yi = b$yi, 
+                                                ens.b = MetaUtility::calib_ests( yi = b$yi, 
                                                                 sei = sqrt(b$vyi) )
                                                 if ( tail == "above" ) return( sum(ens.b > c(q)) / length(ens.b) )
                                                 if ( tail == "below" ) return( sum(ens.b < c(q)) / length(ens.b) )
@@ -128,14 +129,16 @@ analyze_one_meta = function( dat,
                                        digits = 0 ),
                             sep = " " )
     
-    levels = ""
-    k = nrow(dat)
   } else {
     
-    Phat.df = data.frame( Est = rep( NA, length(ql) ),
+    # if t2 = 0 exactly, just check if Phat = 0 or 1
+    Phat.df = data.frame( Est = 100 * (c(est) > ql),
                           lo = rep( NA, length(ql) ),
                           hi = rep( NA, length(ql) ),
-                          boot.note = rep( "t2 = 0 exactly, so no Phat", length(ql) ) )
+                          boot.note = rep( "t2 = 0 exactly, so no Phat CI", length(ql) ) )
+    Phat.df$string = paste( Phat.df$Est, 
+                            " [NA, NA]", 
+                            sep = "")
   }
   
   
@@ -187,12 +190,9 @@ analyze_one_meta = function( dat,
   Phat.names.2 = paste( Phat.names,
                         "unrounded",
                         sep = " ")
-  if ( t2 > 0 ){
-    new.row[ , Phat.names.2 ] = Phat.df$Est
-  } else {
-    new.row[ , Phat.names.2 ] = NA
-  }
-  
+  new.row[ , Phat.names.2 ] = Phat.df$Est
+
+
   new.row$Porig.unrounded = Porig
 
   
@@ -206,21 +206,6 @@ analyze_one_meta = function( dat,
   }
 } 
 
-
-# ensemble estimates as in Wang paper
-my_ens = function(yi,
-                  sei ) {
-  
-  meta = rma.uni( yi = yi, 
-                  sei = sei, 
-                  method = "DL" )
-  
-  muhat = meta$b
-  t2 = meta$tau2
-  
-  # return ensemble estimates
-  c(muhat) + ( c(t2) / ( c(t2) + sei^2 ) )^(1/2) * ( yi - c(muhat) )
-}
 
 
 

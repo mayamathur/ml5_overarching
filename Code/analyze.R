@@ -22,7 +22,7 @@ library(MetaUtility)
 library(Replicate)
 library(robumeta)
 
-############################## EXPLORE THE DATA ############################## 
+###################################### EXPLORE ######################################
 
 # codebook verbatim from Charlie's code:
 #Study - Which effect is being replicated? 
@@ -43,11 +43,51 @@ df %>% group_by(Study, Version) %>%
   summarise( n() )
 
 
-# stats to report:
-# (all studies, just RPP, just revised) x (Phat>0, Phat>.10, Porig)
+rm("resE")
+# make all the subsets to analyze
+studies = unique(df$Study)
+ql = c(0, MetaUtility::r_to_z(.10) )
+boot.reps = 500  # ~~~ INCREASE LATER
+digits = 2
+z.to.r = TRUE
 
-# for the following subsets: (i) study; (ii) study-version
-# if k >= 10, Phat > 0 and Phat > r = 0.10
-# Porig
+# 
+for( i in studies ) {
+  # all replications (RPP and Revised)
+  analyze_one_meta( dat = df %>% filter( Study == i ),
+                    yi.name = "yi.f",
+                    vi.name = "vi.f",
+                    meta.name = paste( i, ", all", sep = ""),
+                    ql = ql,
+                    boot.reps = boot.reps,
+                    n.tests = 1,
+                    digits = digits,
+                    z.to.r = z.to.r )
+  # automatically writes to resE
+  
+  # RPP only
+  analyze_one_meta( dat = df %>% filter( Study == i & Version == "RP:P" ),
+                    yi.name = "yi.f",
+                    vi.name = "vi.f",
+                    meta.name = paste( i, ", RP:P", sep = ""),
+                    ql = ql,
+                    boot.reps = boot.reps,
+                    n.tests = 1,
+                    digits = digits,
+                    z.to.r = z.to.r )
+  
+  # Revised only
+  analyze_one_meta( dat = df %>% filter( Study == i & Version == "Revised" ),
+                    yi.name = "yi.f",
+                    vi.name = "vi.f",
+                    meta.name = paste( i, ", Revised", sep = ""),
+                    ql = ql,
+                    boot.reps = boot.reps,
+                    n.tests = 1,
+                    digits = digits,
+                    z.to.r = z.to.r )
+}
+
+View(resE)
 
 
