@@ -1,15 +1,15 @@
 
 prepped.data.dir = "~/Dropbox/Personal computer/Independent studies/Many Labs 5 (ML5)/Charlie's overarching manuscript/MM analyses for ML5 overarching (git)/Data/Prepped data"
 raw.data.dir = "~/Dropbox/Personal computer/Independent studies/Many Labs 5 (ML5)/Charlie's overarching manuscript/MM analyses for ML5 overarching (git)/Data/Raw data from Charlie"
-# the rest is verbatim from Charlie's code, "ML5 Overarching Analyses.R"
 
 library(metafor)
 library(psych)
 library(MetaUtility)
 library(dplyr)
 
-############################# VERBATIM FROM CHARLIE'S SCRIPT ############################# 
+############################# PREP CHARLIE'S DATA ############################# 
 
+# verbatim from his "ML5 Overarching Analyses.R" script
 #Reading data
 #setwd("C:/Users/Charlie/Dropbox/Charlie_Harddrive/Desktop/Ongoing Projects/Many Labs 5/Overarching Paper/Results Included")
 setwd(raw.data.dir)
@@ -129,47 +129,3 @@ nrow(d)  # should be 101, just like Data
 ##### Write Prepped Data #####
 setwd(prepped.data.dir)
 write.csv(d, "summary_focal_prepped.csv", row.names = FALSE)
-
-
-
-
-
-# ############################# PREP INTERACTION EFFECT DATA #############################
-# 
-# #Reading in the data
-# setwd(raw.data.dir)
-# Data2<-read.csv(file="Summary Effect Sizes - Interaction Effects.csv",header=TRUE)
-# Data2
-# str(Data2)
-# 
-# #Convert Effect Sizes to a common metric (correlation coefficient)
-# 
-# #Variance explained measures
-# list(levels(Data2$ES.Metric))
-# R2<-subset(Data2,ES.Metric == "pseudo R2" | ES.Metric == "partial eta2")
-# R2$Value<-sqrt(R2$Value)
-# 
-# #g
-# G<-subset(Data2,ES.Metric == "g")
-# G$Value<-d2r(G$Value)
-# 
-# ###Merging data back together
-# Data2<-rbind(R2,G)
-# 
-# #Reversing Effect Sizes where revised version showed weaker/reversal effect
-# 
-# NoReverse<-subset(Data2,Reverse == "no")
-# Reverse<-subset(Data2,Reverse == "yes")
-# Reverse$Value<-Reverse$Value*-1
-# 
-# ###Merging back together
-# Data2<-rbind(NoReverse,Reverse)
-# 
-# 
-# ##### Write Prepped Data #####
-# setwd(prepped.data.dir)
-# write.csv(Data2, "summary_interaction_prepped.csv", row.names = FALSE)
-
-
-
-

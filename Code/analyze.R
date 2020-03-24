@@ -11,8 +11,6 @@ setwd(code.dir)
 source("helper.R")
 
 setwd(prepped.data.dir)
-# # interactions of protocol with target effect
-# di = read.csv("summary_interactions_prepped.csv")
 
 # focal effects at each site
 df = read.csv("summary_focal_prepped.csv")
