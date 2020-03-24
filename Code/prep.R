@@ -3,8 +3,8 @@ prepped.data.dir = "~/Dropbox/Personal computer/Independent studies/Many Labs 5 
 raw.data.dir = "~/Dropbox/Personal computer/Independent studies/Many Labs 5 (ML5)/Charlie's overarching manuscript/MM analyses for ML5 overarching (git)/Data/Raw data from Charlie"
 # the rest is verbatim from Charlie's code, "ML5 Overarching Analyses.R"
 
-require(metafor)
-require(psych)
+library(metafor)
+library(psych)
 library(MetaUtility)
 library(dplyr)
 

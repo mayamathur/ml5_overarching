@@ -2,16 +2,15 @@
 ################################ FOR ANALYSIS ################################
 
 # analyze a subset 
-analyze_one_meta = function( dat,
-                             yi.name,
-                             vi.name,
-                             meta.name,
+analyze_one_meta = function( dat,  # subset to analyze
+                             yi.name,  # variable name of point estimate in replications (on Fisher's z scale)
+                             vi.name, # variable name of variance estimate in replications (on Fisher's z scale)
+                             meta.name,  # name of meta-analysis/project
                              
                              ql,  # on Fisher's z scale
-                             z.to.r,
+                             z.to.r,  # should we transform back to r for reporting?
                              boot.reps = 2000,
-                             n.tests=1,
-                             digits = 2) {
+                             digits = 2 ) {  # digits for rounding
   
   # #~~~ TEST ONLY:
   # dat = df %>% filter( Study == "Albarracin S5" & Version == "RP:P" )  # k = 1 case
@@ -23,28 +22,27 @@ analyze_one_meta = function( dat,
   # meta.name = "Fake"
   # ql = c(0, MetaUtility::r_to_z(.10) )
   # boot.reps = 500
-  # n.tests = 1
   # digits = 2
   # z.to.r = TRUE
   # # ~~~
-  
 
-  
   dat$yi = dat[[yi.name]]
   dat$vyi = dat[[vi.name]]
   
   k = nrow(dat)
   
   ##### Meta-Analyze the Replications #####
+  # prepare to catch errors with robumeta
   robu.error = NA
-  
 
+  # fine to proceed with meta-analysis even if k=1; it just returns the
+  # study's yi.f and vi.f and sets t2 = 0
   tryCatch({
-    # often running into some kind of SVD problem??
+    # sometimes hits errors
     library(robumeta)
     meta = robu( yi ~ 1,
                  data = dat,
-                 studynum = 1:nrow(dat),
+                 studynum = 1:nrow(dat),  # assume no clustering
                  var.eff.size = vyi,
                  small = TRUE)
     
@@ -59,8 +57,6 @@ analyze_one_meta = function( dat,
     robu.error <<- err$message
     
     # use rma.uni instead (parametric)
-    # fine to use this with a single study; it just returns the
-    # study's yi.f and vi.f and sets t2 = 0
     meta <<- rma.uni( yi = yi,
                     vi = vyi,
                     data = dat,
@@ -73,10 +69,9 @@ analyze_one_meta = function( dat,
     mu.pval <<- meta$pval
   })
   
-  
 
   ##### NPPhat #####
-  # this will be skipped when there is a single study
+  # skip this if k=1 or if there is no heterogeneity
   if ( t2 > 0 ) {
     Phat.l = lapply( ql,
                      FUN = function(q) {
@@ -92,7 +87,6 @@ analyze_one_meta = function( dat,
                        if ( tail == "above" ) Phat.NP.ens = sum(ens > c(q)) / length(ens)
                        if ( tail == "below" ) Phat.NP.ens = sum(ens < c(q)) / length(ens)
                        
-                       library(boot)
                        Note = NA
                        boot.lo.ens = NA  # new
                        boot.hi.ens = NA
@@ -149,10 +143,10 @@ analyze_one_meta = function( dat,
     # omit CI if it was NA
     Phat.df$string[ is.na(Phat.df$lo) ] = round( 100*Phat.df$Est[ is.na(Phat.df$lo) ],
                                                  digits = 0 )
-    
+  # if t2 = 0 exactly: 
   } else {
     
-    # if t2 = 0 exactly, just check if Phat = 0 or 1
+    # just check if Phat = 0 or 1 but omit CI
     Phat.df = data.frame( Est = 100 * (c(est) > ql),
                           lo = rep( NA, length(ql) ),
                           hi = rep( NA, length(ql) ),
@@ -173,6 +167,7 @@ analyze_one_meta = function( dat,
           vyr = mu.se^2 )
   
   ##### Put Results in Dataframe #####
+  # transform back to r if needed
   if (z.to.r == TRUE) {
     est = z_to_r(est)
     lo = z_to_r(mu.lo)
@@ -193,14 +188,13 @@ analyze_one_meta = function( dat,
                         Est = est.string,
                         Pval = format_stat(mu.pval, cutoffs = c(.1, .0001) ),
                         Tau = tau.string,
-                        Porig = round( Porig, digits = digits )
-  )
-  
+                        Porig = round( Porig, digits = digits ) )
 
   # add Phat results to dataframe
-  # tail is now just for string purposes
+  # tail is now just for the purpose of creating the column name
   tail = rep("above", length(unlist(ql)))
-  tail[unlist(ql) < 0] = "below"
+  tail[ unlist(ql) < 0 ] = "below"
+  # transform q back to r, if desired, for the column name
   if (z.to.r == TRUE) q.vec = z_to_r(unlist(ql)) else q.vec = unlist(ql)
   Phat.names = paste( "Percent ", tail, " ", q.vec, sep = "" )
   new.row[ , Phat.names ] = Phat.df$string
@@ -211,13 +205,11 @@ analyze_one_meta = function( dat,
                         sep = " ")
   new.row[ , Phat.names.2 ] = Phat.df$Est
 
-
+  # details at the end of df, to easily lop off for prettiness
   new.row$Porig.unrounded = Porig
-  
   new.row$robu.error = robu.error
-
   
-  # this should be a global variable
+  # resE is a global variable
   if ( !exists("resE") ){
     resE <<- new.row
   } else {

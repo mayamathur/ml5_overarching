@@ -1,7 +1,4 @@
 
-# TO DO:
-#  - we used robu except when it wouldn't converge (2 cases of the latter)
-# Phat when there was no heterogeneity or only 1 study
 
 ###################################### PRELIMINARIES ######################################
 
@@ -14,20 +11,19 @@ setwd(code.dir)
 source("helper.R")
 
 setwd(prepped.data.dir)
-# interactions of protocol with target effect
-di = read.csv("summary_interactions_prepped.csv")
+# # interactions of protocol with target effect
+# di = read.csv("summary_interactions_prepped.csv")
 
 # focal effects at each site
 df = read.csv("summary_focal_prepped.csv")
 # note that per prep code, "Value" is always on Pearson's r scale, NOT R^2
-
-
 
 library(dplyr)
 library(ggplot2)
 library(MetaUtility)
 library(Replicate)
 library(robumeta)
+library(boot)
 
 ###################################### EXPLORE ######################################
 
@@ -162,6 +158,8 @@ t = resE %>% group_by(subset) %>%
 View(t)
 setwd(results.dir)
 
-
+write.csv(x = t,
+          file = "results_aggregated_by_subset.csv",
+          row.names = FALSE)
 
 
