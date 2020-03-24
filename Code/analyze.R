@@ -1,4 +1,8 @@
 
+# TO DO:
+#  - we used robu except when it wouldn't converge (2 cases of the latter)
+# Phat when there was no heterogeneity or only 1 study
+
 ###################################### PRELIMINARIES ######################################
 
 prepped.data.dir = "~/Dropbox/Personal computer/Independent studies/Many Labs 5 (ML5)/Charlie's overarching manuscript/MM analyses for ML5 overarching (git)/Data/Prepped data"
@@ -52,7 +56,7 @@ studies = unique(df$Study)
 ql = c(0,
        MetaUtility::r_to_z(.10),
        MetaUtility::r_to_z(.20) )
-boot.reps = 2000 
+boot.reps = 2000 # ~~~ increase
 digits = 2
 z.to.r = TRUE
 
@@ -95,6 +99,22 @@ for( i in studies ) {
 
 View(resE)
 
+# # debugging
+# analyze_one_meta( dat = df %>% filter( Study == "Albarracin S5" & Version == "RP:P" ),
+#                   yi.name = "yi.f",
+#                   vi.name = "vi.f",
+#                   meta.name = paste( i, ", Revised", sep = ""),
+#                   ql = ql,
+#                   boot.reps = boot.reps,
+#                   n.tests = 1,
+#                   digits = digits,
+#                   z.to.r = z.to.r )
+
+# add variable for which group the estimate is in
+resE$subset = unlist( lapply( X = resE$Meta,
+                              FUN = function(x) strsplit( as.character(x), ", " )[[1]][[2]] ) )
+
+
 # save results
 setwd(results.dir)
 write.csv(x = resE,
@@ -102,17 +122,31 @@ write.csv(x = resE,
           row.names = FALSE)
 
 # pretty version without extra columns
-temp = resE[ , !grepl( pattern = "unrounded", names(resE) ) ]
+temp = resE[ , which( grepl( pattern = "unrounded", names(resE) ) == FALSE ) ]
+temp = temp %>% select(-c(robu.error))
 write.csv(x = temp,
           file = "results_table_pretty.csv",
           row.names = FALSE)
 
 
-###################################### SUMMARY STATS ######################################
+# subset to analyses of all replications combined
+write.csv(x = temp %>% filter(subset == "all"),
+          file = "results_table_pretty_combined.csv",
+          row.names = FALSE)
 
-# add variable for which group the estimate is in
-resE$subset = unlist( lapply( X = resE$Meta,
-                              FUN = function(x) strsplit( as.character(x), ", " )[[1]][[2]] ) )
+
+# and to analyses of RP:P replications only
+write.csv(x = temp %>% filter(subset == "RP:P"),
+          file = "results_table_pretty_rpp.csv",
+          row.names = FALSE)
+
+# and to analyses of Revised only
+write.csv(x = temp %>% filter(subset == "Revised"),
+          file = "results_table_pretty_revised.csv",
+          row.names = FALSE)
+
+
+###################################### SUMMARY STATS ######################################
 
 # summary table by subset
 t = resE %>% group_by(subset) %>%

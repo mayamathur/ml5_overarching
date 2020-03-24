@@ -14,10 +14,13 @@ analyze_one_meta = function( dat,
                              digits = 2) {
   
   # #~~~ TEST ONLY:
-  # dat = df %>% filter( Study == "Albarracin S7" )
+  # dat = df %>% filter( Study == "Albarracin S5" & Version == "RP:P" )  # k = 1 case
+  # dat = df %>% filter( Study == "Albarracin S7" )  # k = 14
+  # 
+  # dat = df %>% filter( Study == "Albarracin S7" & Version == "Revised" ) 
   # yi.name = "yi.f"
   # vi.name = "vi.f"
-  # meta.name = "Forster all"
+  # meta.name = "Fake"
   # ql = c(0, MetaUtility::r_to_z(.10) )
   # boot.reps = 500
   # n.tests = 1
@@ -25,40 +28,55 @@ analyze_one_meta = function( dat,
   # z.to.r = TRUE
   # # ~~~
   
+
+  
   dat$yi = dat[[yi.name]]
   dat$vyi = dat[[vi.name]]
   
-  ##### Robust Meta-Analysis #####
-  
-  # often running into some kind of SVD problem??
-  # library(robumeta)
-  # ( meta = robu( yi ~ 1,
-  #                data = dat,
-  #                studynum = 1:nrow(dat),
-  #                var.eff.size = vyi,
-  #                modelweights = "HIER",
-  #                small = TRUE) )
-  # 
-  # est = meta$b.r
-  # t2 = meta$mod_info$tau.sq
-  # mu.lo = meta$reg_table$CI.L
-  # mu.hi = meta$reg_table$CI.U
-  # mu.se = meta$reg_table$SE
-  # mu.pval = meta$reg_table$prob
-  
-  meta = rma.uni( yi = yi,
-                  vi = vyi, 
-                  data = dat,
-                  test = "knha" )
-  est = meta$b
-  t2 = meta$tau2
-  mu.lo = meta$ci.lb
-  mu.hi = meta$ci.ub
-  mu.se = meta$se
-  mu.pval = meta$pval
   k = nrow(dat)
   
+  ##### Meta-Analyze the Replications #####
+  robu.error = NA
+  
+
+  tryCatch({
+    # often running into some kind of SVD problem??
+    library(robumeta)
+    meta = robu( yi ~ 1,
+                 data = dat,
+                 studynum = 1:nrow(dat),
+                 var.eff.size = vyi,
+                 small = TRUE)
+    
+    est = meta$b.r
+    t2 = meta$mod_info$tau.sq
+    mu.lo = meta$reg_table$CI.L
+    mu.hi = meta$reg_table$CI.U
+    mu.se = meta$reg_table$SE
+    mu.pval = meta$reg_table$prob
+    
+  }, error = function(err){
+    robu.error <<- err$message
+    
+    # use rma.uni instead (parametric)
+    # fine to use this with a single study; it just returns the
+    # study's yi.f and vi.f and sets t2 = 0
+    meta <<- rma.uni( yi = yi,
+                    vi = vyi,
+                    data = dat,
+                    test = "knha" )
+    est <<- meta$b
+    t2 <<- meta$tau2
+    mu.lo <<- meta$ci.lb
+    mu.hi <<- meta$ci.ub
+    mu.se <<- meta$se
+    mu.pval <<- meta$pval
+  })
+  
+  
+
   ##### NPPhat #####
+  # this will be skipped when there is a single study
   if ( t2 > 0 ) {
     Phat.l = lapply( ql,
                      FUN = function(q) {
@@ -128,6 +146,9 @@ analyze_one_meta = function( dat,
                                        100*Phat.df$hi,
                                        digits = 0 ),
                             sep = " " )
+    # omit CI if it was NA
+    Phat.df$string[ is.na(Phat.df$lo) ] = round( 100*Phat.df$Est[ is.na(Phat.df$lo) ],
+                                                 digits = 0 )
     
   } else {
     
@@ -136,17 +157,17 @@ analyze_one_meta = function( dat,
                           lo = rep( NA, length(ql) ),
                           hi = rep( NA, length(ql) ),
                           boot.note = rep( "t2 = 0 exactly, so no Phat CI", length(ql) ) )
-    Phat.df$string = paste( Phat.df$Est, 
-                            " [NA, NA]", 
-                            sep = "")
+    
+    Phat.df$string = Phat.df$Est # omit the CI
+    # Phat.df$string = paste( Phat.df$Est, 
+    #                         " [NA, NA]", 
+    #                         sep = "")
   }
   
-  
+
   ##### Porig #####
-  
-  # ~~~ PLACEHOLDER ONLY until we have stats for the original study
-  Porig = p_orig( orig.y = .5,
-          orig.vy = 0.02,
+  Porig = p_orig( orig.y = dat$yio.f[1],  # they will all be the same
+          orig.vy = dat$vio.f[1],
           yr = est,
           t2 = t2,
           vyr = mu.se^2 )
@@ -171,13 +192,11 @@ analyze_one_meta = function( dat,
                         k = k,
                         Est = est.string,
                         Pval = format_stat(mu.pval, cutoffs = c(.1, .0001) ),
-                        Tau = tau.string
+                        Tau = tau.string,
+                        Porig = round( Porig, digits = digits )
   )
   
-  
-  # add Porig results to dataframe
-  new.row$Porig = round( Porig, digits = digits )
-  
+
   # add Phat results to dataframe
   # tail is now just for string purposes
   tail = rep("above", length(unlist(ql)))
@@ -194,6 +213,8 @@ analyze_one_meta = function( dat,
 
 
   new.row$Porig.unrounded = Porig
+  
+  new.row$robu.error = robu.error
 
   
   # this should be a global variable
