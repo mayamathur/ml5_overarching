@@ -16,7 +16,7 @@ analyze_one_meta = function( dat,  # subset to analyze
   # dat = df %>% filter( Study == "Albarracin S5" & Version == "RP:P" )  # k = 1 case
   # dat = df %>% filter( Study == "Albarracin S7" )  # k = 14
   # 
-  # dat = df %>% filter( Study == "Albarracin S7" & Version == "Revised" ) 
+  # dat = df %>% filter( Study == "Albarracin S7" & Version == "Revised" )
   # yi.name = "yi.f"
   # vi.name = "vi.f"
   # meta.name = "Fake"
@@ -69,6 +69,19 @@ analyze_one_meta = function( dat,  # subset to analyze
     mu.pval <<- meta$pval
   })
   
+  ##### Porig #####
+  Porig = p_orig( orig.y = dat$yio.f[1],  # they will all be the same
+                  orig.vy = dat$vio.f[1],
+                  yr = est,
+                  t2 = t2,
+                  vyr = mu.se^2 )
+  
+  ##### Probability of Significance Agreement #####
+  # P(significance agreement) for pooled replication estimate
+  Psignif.agree = prob_signif_agree( orig.y = dat$yio.f[1],  # they will all be the same,
+                                     orig.vy = dat$vio.f[1],
+                                     rep.vy = mu.se^2,
+                                     t2 = t2 )
 
   ##### NPPhat #####
   # skip this if k=1 or if there is no heterogeneity
@@ -159,12 +172,7 @@ analyze_one_meta = function( dat,  # subset to analyze
   }
   
 
-  ##### Porig #####
-  Porig = p_orig( orig.y = dat$yio.f[1],  # they will all be the same
-          orig.vy = dat$vio.f[1],
-          yr = est,
-          t2 = t2,
-          vyr = mu.se^2 )
+
   
   ##### Put Results in Dataframe #####
   # transform back to r if needed
@@ -188,7 +196,8 @@ analyze_one_meta = function( dat,  # subset to analyze
                         Est = est.string,
                         Pval = format_stat(mu.pval, cutoffs = c(.1, .0001) ),
                         Tau = tau.string,
-                        Porig = round( Porig, digits = digits ) )
+                        Porig = round( Porig, digits = digits ),
+                        Psignif.agree = round( Psignif.agree, digits = digits ) )
 
   # add Phat results to dataframe
   # tail is now just for the purpose of creating the column name
@@ -207,6 +216,7 @@ analyze_one_meta = function( dat,  # subset to analyze
 
   # details at the end of df, to easily lop off for prettiness
   new.row$Porig.unrounded = Porig
+  new.row$Psignif.agree.unrounded = Psignif.agree
   new.row$robu.error = robu.error
   
   # resE is a global variable

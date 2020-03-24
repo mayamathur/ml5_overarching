@@ -7,6 +7,7 @@ raw.data.dir = "~/Dropbox/Personal computer/Independent studies/Many Labs 5 (ML5
 code.dir = "~/Dropbox/Personal computer/Independent studies/Many Labs 5 (ML5)/Charlie's overarching manuscript/MM analyses for ML5 overarching (git)/Code"
 results.dir = "~/Dropbox/Personal computer/Independent studies/Many Labs 5 (ML5)/Charlie's overarching manuscript/MM analyses for ML5 overarching (git)/Results from R"
 
+# helper fns
 setwd(code.dir)
 source("helper.R")
 
@@ -44,30 +45,36 @@ df %>% group_by(Study, Version) %>%
   summarise( n() )
 
 
+###################################### ANALYZE ######################################
+
 rm("resE")
-# make all the subsets to analyze
+
+# global parameters for the analyses to follow
 studies = unique(df$Study)
 ql = c(0,
        MetaUtility::r_to_z(.10),
        MetaUtility::r_to_z(.20) )
-boot.reps = 2000 # ~~~ increase
+boot.reps = 2000 
 digits = 2
 z.to.r = TRUE
 
-# 
+# for each replication, analyze 3 subsets:
+# (1) all replications regardless of RPP vs. Revised
+# (2) just RPP
+# (3) just Revised
+
 for( i in studies ) {
   # all replications (RPP and Revised)
+  # this fn automatically writes to resE
   analyze_one_meta( dat = df %>% filter( Study == i ),
                     yi.name = "yi.f",
                     vi.name = "vi.f",
                     meta.name = paste( i, ", all", sep = ""),
                     ql = ql,
                     boot.reps = boot.reps,
-                    n.tests = 1,
                     digits = digits,
                     z.to.r = z.to.r )
-  # automatically writes to resE
-  
+
   # RPP only
   analyze_one_meta( dat = df %>% filter( Study == i & Version == "RP:P" ),
                     yi.name = "yi.f",
@@ -75,7 +82,6 @@ for( i in studies ) {
                     meta.name = paste( i, ", RP:P", sep = ""),
                     ql = ql,
                     boot.reps = boot.reps,
-                    n.tests = 1,
                     digits = digits,
                     z.to.r = z.to.r )
   
@@ -86,7 +92,6 @@ for( i in studies ) {
                     meta.name = paste( i, ", Revised", sep = ""),
                     ql = ql,
                     boot.reps = boot.reps,
-                    n.tests = 1,
                     digits = digits,
                     z.to.r = z.to.r )
 }
@@ -152,12 +157,15 @@ t = resE %>% group_by(subset) %>%
              Phat10.mn = round( mean(`Percent above 0.1 unrounded`), 0 ),
              Phat20.mn = round( mean(`Percent above 0.2 unrounded`), 0 ),
              
-             Porig.mn = round( mean(Porig.unrounded), digits ) )
+             Porig.mn = round( mean(Porig.unrounded), digits ),
+             
+             Psignif.agree.mn = round( mean(Psignif.agree), digits ) )
 View(t)
 setwd(results.dir)
 
 write.csv(x = t,
           file = "results_aggregated_by_subset.csv",
           row.names = FALSE)
+
 
 
