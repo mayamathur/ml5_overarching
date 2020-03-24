@@ -171,8 +171,6 @@ analyze_one_meta = function( dat,  # subset to analyze
     #                         sep = "")
   }
   
-
-
   
   ##### Put Results in Dataframe #####
   # transform back to r if needed
@@ -228,8 +226,6 @@ analyze_one_meta = function( dat,  # subset to analyze
     detach("package:plyr", unload=TRUE)
   }
 } 
-
-
 
 
 ################################ MISCELLANEOUS ################################
