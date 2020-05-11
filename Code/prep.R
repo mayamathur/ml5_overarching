@@ -66,6 +66,7 @@ setwd(raw.data.dir)
 rpp = read.csv("RPP Contested Reps.csv")
 
 # correlation and sample size of original study
+# look at RPP variables
 rpp$T_r..O.
 rpp$T_N..O.; rpp$N..O. # should be the same
 rpp$Authors..O.
