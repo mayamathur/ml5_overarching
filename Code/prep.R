@@ -74,7 +74,7 @@ rpp$Authors..O.
 rpp$N..O. = as.numeric( as.character(rpp$N..O.) )
 
 
-# recode author variable to make merger variable
+# make new author variable to make merger variable
 # some contested replications in RPP weren't redone in ML5, so no need to recode those
 rpp$Study = rep(NA, nrow(rpp))
 rpp$Study[ rpp$Authors..O. == "D Albarrac\x90n, IM Handley, K Noguchi, KC McCulloch, H Li, J Leeper, RD Brown, A Earl, WP Hart" &
@@ -99,7 +99,7 @@ rpp$Study[ rpp$Authors..O. == "KD Vohs, JW Schooler" ] = "Vohs"
 
 rpp$Study[ rpp$Authors..O. == "V Lobue, JS DeLoache" ] = "LoBue"
 
-
+# study names in Charlie's data that don't have a match in RPP
 # should be none
 unique( Data$Study[ !Data$Study %in% rpp$Study ] )
 
@@ -125,6 +125,9 @@ d = merge( Data,
            all.x = TRUE )
 
 nrow(d)  # should be 101, just like Data
+
+# sanity check
+r_to_z( rpp$T_r..O.[ rpp$Study == "Payne" ] ); d$yio.f[ d$Study == "Payne" ]
 
 
 ##### Write Prepped Data #####

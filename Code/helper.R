@@ -26,6 +26,7 @@ analyze_one_meta = function( dat,  # subset to analyze
   # z.to.r = TRUE
   # # ~~~
 
+  # standardize variable names
   dat$yi = dat[[yi.name]]
   dat$vyi = dat[[vi.name]]
   
@@ -78,7 +79,7 @@ analyze_one_meta = function( dat,  # subset to analyze
   
   ##### Probability of Significance Agreement #####
   # P(significance agreement) for pooled replication estimate
-  Psignif.agree = prob_signif_agree( orig.y = dat$yio.f[1],  # they will all be the same,
+  Psignif.agree = prob_signif_agree( orig.y = dat$yio.f[1],  # all entries of this variable will be the same
                                      orig.vy = dat$vio.f[1],
                                      rep.vy = mu.se^2,
                                      t2 = t2 )

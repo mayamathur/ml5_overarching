@@ -36,7 +36,7 @@ library(boot)
 #Reverse - Does the effect size need to be reversed? (for variance explained effect sizes)
 #Label - combination of Study and Version for labeling figures
 
-# number of sites per replication
+# number of sites per replication, including revised and RPP
 df %>% group_by(Study) %>%
   summarise( n() )
 
@@ -146,6 +146,14 @@ write.csv(x = temp %>% filter(subset == "Revised"),
 
 
 ###################################### SUMMARY STATS ######################################
+
+# read back in 
+setwd(results.dir)
+write.csv(x = resE,
+          file = "results_table_full.csv",
+          row.names = FALSE)
+
+# ~~ add sensitivity analysis that excludes t2>0 AND k<10
 
 # summary table by subset
 t = resE %>% group_by(subset) %>%
