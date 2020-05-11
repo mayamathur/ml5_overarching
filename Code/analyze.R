@@ -149,21 +149,18 @@ write.csv(x = temp %>% filter(subset == "Revised"),
 
 # read back in 
 setwd(results.dir)
-write.csv(x = resE,
-          file = "results_table_full.csv",
-          row.names = FALSE)
+resE = read.csv("results_table_full.csv")
 
-# ~~ add sensitivity analysis that excludes t2>0 AND k<10
-
+##### General Summary Table #####
 # summary table by subset
 t = resE %>% group_by(subset) %>%
   summarise( k.reps = sum(k),
              n.studies = n(),
              Tau.mn = mean(Tau),
              Perc.Tau.GT0 = round( 100 * mean(Tau>0), 0 ),
-             Phat0.mn = round( mean(`Percent above 0 unrounded`), 0 ),
-             Phat10.mn = round( mean(`Percent above 0.1 unrounded`), 0 ),
-             Phat20.mn = round( mean(`Percent above 0.2 unrounded`), 0 ),
+             Phat0.mn = round( mean(Percent.above.0.unrounded), 0 ),
+             Phat10.mn = round( mean(Percent.above.0.1.unrounded), 0 ),
+             Phat20.mn = round( mean(Percent.above.0.2.unrounded), 0 ),
              
              Porig.mn = round( mean(Porig.unrounded), digits ),
              
@@ -174,6 +171,36 @@ setwd(results.dir)
 write.csv(x = t,
           file = "results_aggregated_by_subset.csv",
           row.names = FALSE)
+
+
+##### Same Thing, But Exclude Too-Small Replication Subsets #####
+# for sensitivity analysis that excludes t2>0 AND k<10
+resE$too.small = (resE$k < 10) & (resE$Tau > 0) 
+table(resE$too.small)
+
+# summary table by subset
+t = resE %>% group_by(subset) %>%
+  filter(too.small == FALSE) %>%
+  summarise( k.reps = sum(k),
+             n.studies = n(),
+             Tau.mn = mean(Tau),
+             Perc.Tau.GT0 = round( 100 * mean(Tau>0), 0 ),
+             Phat0.mn = round( mean(Percent.above.0.unrounded), 0 ),
+             Phat10.mn = round( mean(Percent.above.0.1.unrounded), 0 ),
+             Phat20.mn = round( mean(Percent.above.0.2.unrounded), 0 ),
+             
+             Porig.mn = round( mean(Porig.unrounded), digits ),
+             
+             Psignif.agree.mn = round( mean(Psignif.agree), digits ) )
+View(t)
+setwd(results.dir)
+
+write.csv(x = t,
+          file = "results_aggregated_by_subset_exclude_too_small.csv",
+          row.names = FALSE)
+
+
+
 
 
 

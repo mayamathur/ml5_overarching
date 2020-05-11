@@ -25,7 +25,7 @@ library(Replicate)
 library(robumeta)
 library(boot)
 
-###################################### MANUALLY REPRODUCE: CROSBY ALL ######################################
+###################################### MANUALLY REPRODUCE ONE META ######################################
 
 dat = df %>% filter( Study == "Crosby")  
 yi.name = "yi.f"
@@ -171,3 +171,9 @@ if ( t2 > 0 ) {
   #                         " [NA, NA]", 
   #                         sep = "")
 }
+  
+  
+  
+Porig
+Psignif.agree
+Phat.df

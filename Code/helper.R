@@ -57,7 +57,7 @@ analyze_one_meta = function( dat,  # subset to analyze
   }, error = function(err){
     robu.error <<- err$message
     
-    # use rma.uni instead (parametric)
+    # use rma.uni instead (REML)
     meta <<- rma.uni( yi = yi,
                     vi = vyi,
                     data = dat,
@@ -101,9 +101,11 @@ analyze_one_meta = function( dat,  # subset to analyze
                        if ( tail == "above" ) Phat.NP.ens = sum(ens > c(q)) / length(ens)
                        if ( tail == "below" ) Phat.NP.ens = sum(ens < c(q)) / length(ens)
                        
+                       # attempt BCa CI
                        Note = NA
                        boot.lo.ens = NA  # new
                        boot.hi.ens = NA
+                       
                        tryCatch({
                          boot.res.ens = boot( data = dat, 
                                               parallel = "multicore",
@@ -130,7 +132,7 @@ analyze_one_meta = function( dat,  # subset to analyze
                          Note <<- err$message
                          
                        }, warning = function(w) {
-                         # catch "extreme order statistics used as endpoints"
+                         # catch "extreme order statistics used as endpoints", which is a message rather than an error
                          boot.lo.ens <<- NA
                          boot.hi.ens <<- NA
                          print( paste(meta.name, ": ", w$message, sep = " ") )
@@ -167,9 +169,6 @@ analyze_one_meta = function( dat,  # subset to analyze
                           boot.note = rep( "t2 = 0 exactly, so no Phat CI", length(ql) ) )
     
     Phat.df$string = Phat.df$Est # omit the CI
-    # Phat.df$string = paste( Phat.df$Est, 
-    #                         " [NA, NA]", 
-    #                         sep = "")
   }
   
   
@@ -202,6 +201,7 @@ analyze_one_meta = function( dat,  # subset to analyze
   # tail is now just for the purpose of creating the column name
   tail = rep("above", length(unlist(ql)))
   tail[ unlist(ql) < 0 ] = "below"
+  
   # transform q back to r, if desired, for the column name
   if (z.to.r == TRUE) q.vec = z_to_r(unlist(ql)) else q.vec = unlist(ql)
   Phat.names = paste( "Percent ", tail, " ", q.vec, sep = "" )

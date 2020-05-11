@@ -1,0 +1,4 @@
+"subset","k.reps","n.studies","Tau.mn","Perc.Tau.GT0","Phat0.mn","Phat10.mn","Phat20.mn","Porig.mn","Psignif.agree.mn"
+"all",101,10,0.039,40,50,10,0,0.1,0.93
+"Revised",55,10,0.037,40,60,30,10,0.11,0.9
+"RP:P",46,10,0.027,40,50,10,0,0.11,0.92
