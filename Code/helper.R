@@ -192,9 +192,9 @@ analyze_one_meta = function( dat,  # subset to analyze
   new.row = data.frame( Meta = meta.name,
                         k = k,
                         Est = est.string,
-                        Pval = format_stat(mu.pval, cutoffs = c(.1, .0001) ),
+                        Pval = format_stat(mu.pval, digits = 3, cutoffs = c(.001, .001) ),
                         Tau = tau.string,
-                        Porig = round( Porig, digits = digits ),
+                        Porig = format_stat(Porig, digits = 3, cutoffs = c(.001, .001) ),
                         Psignif.agree = round( Psignif.agree, digits = digits ) )
 
   # add Phat results to dataframe
@@ -214,6 +214,7 @@ analyze_one_meta = function( dat,  # subset to analyze
   new.row[ , Phat.names.2 ] = Phat.df$Est
 
   # details at the end of df, to easily lop off for prettiness
+  new.row$Pval.unrounded = mu.pval
   new.row$Porig.unrounded = Porig
   new.row$Psignif.agree.unrounded = Psignif.agree
   new.row$robu.error = robu.error
@@ -227,6 +228,7 @@ analyze_one_meta = function( dat,  # subset to analyze
     detach("package:plyr", unload=TRUE)
   }
 } 
+
 
 
 ################################ MISCELLANEOUS ################################

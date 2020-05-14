@@ -44,6 +44,11 @@ df %>% group_by(Study) %>%
 df %>% group_by(Study, Version) %>%
   summarise( n() )
 
+# sample size by revised vs. RPP
+df %>% group_by(Version) %>%
+  summarise( mean(N),
+             median(N) )
+
 
 ###################################### ANALYZE ######################################
 
@@ -124,7 +129,7 @@ write.csv(x = resE,
 temp = resE[ , which( grepl( pattern = "unrounded", names(resE) ) == FALSE ) ]
 temp = temp %>% select(-c(robu.error))
 write.csv(x = temp,
-          file = "results_table_pretty.csv",
+          file = "*results_table_pretty.csv",
           row.names = FALSE)
 
 
@@ -162,21 +167,24 @@ t = resE %>% group_by(subset) %>%
              Phat10.mn = round( mean(Percent.above.0.1.unrounded), 0 ),
              Phat20.mn = round( mean(Percent.above.0.2.unrounded), 0 ),
              
-             Porig.mn = round( mean(Porig.unrounded), digits ),
+             Porig.md = round( median(Porig.unrounded), digits ),
+             Porig.signif.0.05 = round( mean(Porig.unrounded < 0.05), digits ),
+             Porig.signif.0.01 = round( mean(Porig.unrounded < 0.01), digits ),
              
              Psignif.agree.mn = round( mean(Psignif.agree), digits ) )
 View(t)
 setwd(results.dir)
 
 write.csv(x = t,
-          file = "results_aggregated_by_subset.csv",
+          file = "*results_aggregated_by_subset.csv",
           row.names = FALSE)
 
 
 ##### Same Thing, But Exclude Too-Small Replication Subsets #####
 # for sensitivity analysis that excludes t2>0 AND k<10
 resE$too.small = (resE$k < 10) & (resE$Tau > 0) 
-table(resE$too.small)
+resE %>% group_by(subset) %>%
+  summarise(sum(too.small))
 
 # summary table by subset
 t = resE %>% group_by(subset) %>%
@@ -189,18 +197,25 @@ t = resE %>% group_by(subset) %>%
              Phat10.mn = round( mean(Percent.above.0.1.unrounded), 0 ),
              Phat20.mn = round( mean(Percent.above.0.2.unrounded), 0 ),
              
-             Porig.mn = round( mean(Porig.unrounded), digits ),
+             Porig.md = round( median(Porig.unrounded), digits ),
+             Porig.signif.0.05 = round( mean(Porig.unrounded < 0.05), digits ),
+             Porig.signif.0.01 = round( mean(Porig.unrounded < 0.01), digits ),
              
              Psignif.agree.mn = round( mean(Psignif.agree), digits ) )
 View(t)
 setwd(results.dir)
 
 write.csv(x = t,
-          file = "results_aggregated_by_subset_exclude_too_small.csv",
+          file = "*results_aggregated_by_subset_exclude_too_small.csv",
           row.names = FALSE)
 
 
 
+##### Porig among "successful" Revised ones #####
+
+# "significant" Revised ones: 
+#  Albarracin S5, Forster, Schnabel, van Dijk
+# *these have Porig = 0.08, 0, 0.08, and 0.20 respectively
 
 
 
