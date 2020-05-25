@@ -23,6 +23,7 @@ library(MetaUtility)
 library(Replicate)
 library(robumeta)
 library(boot)
+library(metafor)
 
 ###################################### EXPLORE ######################################
 

@@ -57,7 +57,7 @@ analyze_one_meta = function( dat,  # subset to analyze
   }, error = function(err){
     robu.error <<- err$message
     
-    # use rma.uni instead (REML)
+    # if robumeta failed, use rma.uni instead (REML)
     meta <<- rma.uni( yi = yi,
                     vi = vyi,
                     data = dat,
@@ -71,7 +71,7 @@ analyze_one_meta = function( dat,  # subset to analyze
   })
   
   ##### Porig #####
-  Porig = p_orig( orig.y = dat$yio.f[1],  # they will all be the same
+  Porig = p_orig( orig.y = dat$yio.f[1],  # all entries of this vector are the same within this replication
                   orig.vy = dat$vio.f[1],
                   yr = est,
                   t2 = t2,
@@ -79,20 +79,20 @@ analyze_one_meta = function( dat,  # subset to analyze
   
   ##### Probability of Significance Agreement #####
   # P(significance agreement) for pooled replication estimate
-  Psignif.agree = prob_signif_agree( orig.y = dat$yio.f[1],  # all entries of this variable will be the same
+  Psignif.agree = prob_signif_agree( orig.y = dat$yio.f[1],  
                                      orig.vy = dat$vio.f[1],
                                      rep.vy = mu.se^2,
                                      t2 = t2 )
 
   ##### NPPhat #####
-  # skip this if k=1 or if there is no heterogeneity
+  # if there is nonzero estimated heterogeneity
   if ( t2 > 0 ) {
     Phat.l = lapply( ql,
                      FUN = function(q) {
                        
-                       # get new ensemble estimates for this subset
+                       # get ensemble estimates for this subset
                        # yi and vyi aren't using yi.name and vi.name intentionally 
-                       #  since these are newly created variables
+                       #  since these are newly created variables at top of fn
                        ens = MetaUtility::calib_ests( yi = dat$yi, 
                                       sei = sqrt(dat$vyi) )
                        
@@ -103,7 +103,7 @@ analyze_one_meta = function( dat,  # subset to analyze
                        
                        # attempt BCa CI
                        Note = NA
-                       boot.lo.ens = NA  # new
+                       boot.lo.ens = NA
                        boot.hi.ens = NA
                        
                        tryCatch({
@@ -132,13 +132,13 @@ analyze_one_meta = function( dat,  # subset to analyze
                          Note <<- err$message
                          
                        }, warning = function(w) {
-                         # catch "extreme order statistics used as endpoints", which is a message rather than an error
+                         # catch "extreme order statistics used as endpoints",
+                         #  which is a message rather than an error
                          boot.lo.ens <<- NA
                          boot.hi.ens <<- NA
                          print( paste(meta.name, ": ", w$message, sep = " ") )
                          Note <<- w$message
                        }
-                       
                        )  # end tryCatch
                        
                        return( data.frame( Est = Phat.NP.ens,
@@ -150,19 +150,21 @@ analyze_one_meta = function( dat,  # subset to analyze
     
     Phat.df = do.call( rbind, 
                        Phat.l )
+    
+    # make Phat into a nice string for the table, and use percentage rather than proportion
     Phat.df$string = paste( round( 100*Phat.df$Est,
                                    digits = 0 ),
                             format_CI( 100*Phat.df$lo, 
                                        100*Phat.df$hi,
                                        digits = 0 ),
                             sep = " " )
-    # omit CI if it was NA
+    # omit CI from string if it was NA
     Phat.df$string[ is.na(Phat.df$lo) ] = round( 100*Phat.df$Est[ is.na(Phat.df$lo) ],
                                                  digits = 0 )
-  # if t2 = 0 exactly: 
-  } else {
     
-    # just check if Phat = 0 or 1 but omit CI
+  # if t2 = 0 exactly, just check if Phat = 0 or 1 but omit CI 
+  } else {
+
     Phat.df = data.frame( Est = 100 * (c(est) > ql),
                           lo = rep( NA, length(ql) ),
                           hi = rep( NA, length(ql) ),
@@ -180,15 +182,18 @@ analyze_one_meta = function( dat,  # subset to analyze
     hi = z_to_r(mu.hi)
   }
   
+  
+  # make string with pooled replication estimate
   est.string = paste( round( est, digits ),
                       format_CI( lo, 
                                  hi,
                                  digits),
                       sep = " " )
   
+  # make string with heterogeneity estimate
   tau.string = round( sqrt(t2), digits)
   
-  
+  # add this replication as a new row to the "res" results dataframe
   new.row = data.frame( Meta = meta.name,
                         k = k,
                         Est = est.string,
