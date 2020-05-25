@@ -70,6 +70,8 @@ analyze_one_meta = function( dat,  # subset to analyze
     mu.pval <<- meta$pval
   })
   
+  #browser()
+  
   ##### Porig #####
   Porig = p_orig( orig.y = dat$yio.f[1],  # all entries of this vector are the same within this replication
                   orig.vy = dat$vio.f[1],

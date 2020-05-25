@@ -1,6 +1,4 @@
 
-# check how datasets are merged
-
 ###################################### PRELIMINARIES ######################################
 
 prepped.data.dir = "~/Dropbox/Personal computer/Independent studies/Many Labs 5 (ML5)/Charlie's overarching manuscript/MM analyses for ML5 overarching (git)/Data/Prepped data"
@@ -12,11 +10,15 @@ results.dir = "~/Dropbox/Personal computer/Independent studies/Many Labs 5 (ML5)
 setwd(code.dir)
 source("helper.R")
 
+# for debugging discrepancies
 setwd(prepped.data.dir)
-
 # focal effects at each site
 df = read.csv("summary_focal_prepped.csv")
 # note that per prep code, "Value" is always on Pearson's r scale, NOT R^2
+
+# for checking results
+setwd(results.dir)
+res = read.csv("results_table_full.csv")
 
 library(dplyr)
 library(ggplot2)
@@ -24,29 +26,83 @@ library(MetaUtility)
 library(Replicate)
 library(robumeta)
 library(boot)
+library(metafor)
+library(psych)
+library(testthat)
 
 ###################################### MANUALLY REPRODUCE ONE META ######################################
 
-dat = df %>% filter( Study == "Crosby")  
-yi.name = "yi.f"
-vi.name = "vi.f"
-ql = c(0, MetaUtility::r_to_z(.10) )
-boot.reps = 500
-digits = 2
-z.to.r = TRUE
+# try different subsets and ES.metrics
 
-# standardize variable names
-dat$yi = dat[[yi.name]]
-dat$vyi = dat[[vi.name]]
 
-k = nrow(dat)
+##### Start from Raw Datasets #####
+setwd(raw.data.dir)
+rpp = read.csv("RPP Contested Reps.csv")
 
-##### Meta-Analyze the Replications #####
-library(robumeta)
-meta = robu( yi ~ 1,
-             data = dat,
-             studynum = 1:nrow(dat),  # assume no clustering
-             var.eff.size = vyi,
+setwd(raw.data.dir)
+Data<-read.csv(file="Summary Effect Sizes - Single Effects.csv",header=TRUE)
+
+# CHOOSE WHICH SUBSET TO ANALYZE HERE:
+table(Data$Study)
+table(rpp$Authors..O.)
+charlie.meta.name = "van Dijk"
+rpp.meta.name = "E van Dijk, GA van Kleef, W Steinel, I van Beest"
+subset = "RP:P"
+
+# some that I have already checked:
+# charlie.meta.name = "Risen"
+# rpp.meta.name = "JL Risen, T Gilovich"
+# subset = "Revised"
+
+# charlie.meta.name = "Payne"
+# rpp.meta.name = "BK Payne, MA Burkley, MB Stokes"
+# subset = "all"
+
+# subset the datasets and results
+if ( subset == "all" ) Data = Data %>% filter( Study == charlie.meta.name )
+if ( subset == "Revised" ) Data = Data %>% filter( Study == charlie.meta.name & Version == "Revised" )
+if ( subset == "RP:P" ) Data = Data %>% filter( Study == charlie.meta.name & Version == "RP:P" )
+
+( k = nrow(Data) )
+
+res = res[ res$Meta == paste( charlie.meta.name, ", ", subset, sep = "" ), ]
+res
+
+# the prepped dataset for debugging discrepancies
+if ( subset == "all" ) df = df %>% filter( Study == charlie.meta.name )
+if ( subset == "Revised" ) df = df %>% filter( Study == charlie.meta.name & Version == "Revised" )
+if ( subset == "RP:P" ) df = df %>% filter( Study == charlie.meta.name & Version == "RP:P" )
+
+
+##### Estimates on Fisher's Z Scale #####
+
+# convert to Fisher's z
+Data$ES.Metric
+if ( Data$ES.Metric[1] %in% c("pseudo R2", "eta sq") ) Data$yif = r_to_z(sqrt(Data$Value))
+if ( Data$ES.Metric[1] %in% c("d", "g") ) Data$yif = r_to_z(psych::d2r(Data$Value))
+if ( Data$ES.Metric[1] %in% c("r", "rp") ) Data$yif = r_to_z(Data$Value)
+
+# variance of replication estimates
+Data$vif = 1 / (Data$N - 3)
+
+# *sanity check
+expect_equal( sort(Data$yif), sort(df$yi.f) )
+
+# get estimate and variance of original study
+( yio.f = r_to_z( rpp$T_r..O.[ rpp$Authors..O. == rpp.meta.name] ) )
+( vio.f = 1 / (rpp$T_N..O.[ rpp$Authors..O. == rpp.meta.name] - 3) )
+
+# *sanity check
+expect_equal( yio.f, df$yio.f[1] )
+expect_equal( vio.f, df$vio.f[1] )
+
+
+##### Original and Replication Estimates #####
+# meta-analyze replications
+meta = robu( yif ~ 1,
+             data = Data,
+             studynum = 1:k,  # assume no clustering
+             var.eff.size = vif,
              small = TRUE)
 
 est = meta$b.r
@@ -55,125 +111,90 @@ mu.lo = meta$reg_table$CI.L
 mu.hi = meta$reg_table$CI.U
 mu.se = meta$reg_table$SE
 mu.pval = meta$reg_table$prob
-  
 
-  # use rma.uni instead (parametric)
-  meta <<- rma.uni( yi = yi,
-                    vi = vyi,
-                    data = dat,
-                    test = "knha" )
-  est <<- meta$b
-  t2 <<- meta$tau2
-  mu.lo <<- meta$ci.lb
-  mu.hi <<- meta$ci.ub
-  mu.se <<- meta$se
-  mu.pval <<- meta$pval
+
+# **check Est, Pval, Tau in results
+res$Est; round( z_to_r(est),2 ); round( z_to_r(mu.lo),2 ); round( z_to_r(mu.hi),2 )
+res$Pval; mu.pval 
+res$Tau; round( sqrt(t2), 2 )
 
 
 ##### Porig #####
-Porig = p_orig( orig.y = dat$yio.f[1],  # they will all be the same
-                orig.vy = dat$vio.f[1],
-                yr = est,
-                t2 = t2,
-                vyr = mu.se^2 )
+Porig = p_orig( orig.y = yio.f,
+                  orig.vy = vio.f,
+                  yr = est,
+                  t2 = t2,
+                  vyr = mu.se^2 )
 
-##### Probability of Significance Agreement #####
-# P(significance agreement) for pooled replication estimate
-Psignif.agree = prob_signif_agree( orig.y = dat$yio.f[1],  # all entries of this variable will be the same
-                                   orig.vy = dat$vio.f[1],
+# *sanity check
+expect_equal( as.numeric(as.character(res$Porig)), round(Porig, 3) )
+
+
+##### P(signif agree) #####
+Psignif.agree = prob_signif_agree( orig.y = yio.f,  # all entries of this variable will be the same
+                                   orig.vy = vio.f,
                                    rep.vy = mu.se^2,
                                    t2 = t2 )
 
-##### NPPhat #####
-# skip this if k=1 or if there is no heterogeneity
-if ( t2 > 0 ) {
-  Phat.l = lapply( ql,
-                   FUN = function(q) {
-                     
-                     # get new ensemble estimates for this subset
-                     # yi and vyi aren't using yi.name and vi.name intentionally 
-                     #  since these are newly created variables
-                     ens = MetaUtility::calib_ests( yi = dat$yi, 
-                                                    sei = sqrt(dat$vyi) )
-                     
-                     # set tail based on sign of q
-                     if (q >= 0) tail = "above" else tail = "below"
-                     if ( tail == "above" ) Phat.NP.ens = sum(ens > c(q)) / length(ens)
-                     if ( tail == "below" ) Phat.NP.ens = sum(ens < c(q)) / length(ens)
-                     
-                     Note = NA
-                     boot.lo.ens = NA  # new
-                     boot.hi.ens = NA
-                     tryCatch({
-                       boot.res.ens = boot( data = dat, 
-                                            parallel = "multicore",
-                                            R = boot.reps, 
-                                            statistic = function(original, indices) {
-                                              
-                                              b = original[indices,]
-                                              
-                                              ens.b = MetaUtility::calib_ests( yi = b$yi, 
-                                                                               sei = sqrt(b$vyi) )
-                                              if ( tail == "above" ) return( sum(ens.b > c(q)) / length(ens.b) )
-                                              if ( tail == "below" ) return( sum(ens.b < c(q)) / length(ens.b) )
-                                            }
-                       )
-                       
-                       bootCIs.ens = boot.ci(boot.res.ens, type="bca")
-                       boot.lo.ens = bootCIs.ens$bca[4]
-                       boot.hi.ens = bootCIs.ens$bca[5]
-                       
-                     }, error = function(err){
-                       boot.lo.ens <<- NA
-                       boot.hi.ens <<- NA
-                       print( paste(meta.name, ": ", err$message, sep = " ") )
-                       Note <<- err$message
-                       
-                     }, warning = function(w) {
-                       # catch "extreme order statistics used as endpoints"
-                       boot.lo.ens <<- NA
-                       boot.hi.ens <<- NA
-                       print( paste(meta.name, ": ", w$message, sep = " ") )
-                       Note <<- w$message
-                     }
-                     
-                     )  # end tryCatch
-                     
-                     return( data.frame( Est = Phat.NP.ens,
-                                         lo = boot.lo.ens,
-                                         hi = boot.hi.ens,
-                                         boot.note = Note ) )
-                   } )  # end lapply
+# *sanity check
+expect_equal( as.numeric(as.character(res$Psignif.agree)), round(Psignif.agree, 2) )
+
+
+##### Phat(>0) #####
+
+if( t2 > 0 ){
+  
+  Phat0 = prop_stronger(q = 0,
+                        M = est,
+                        t2 = t2,
+                        tail = "above",
+                        dat = Data,
+                        yi.name = "yif",
+                        vi.name = "vif")
+  
+  Phat0.1 = prop_stronger(q = r_to_z(.1),
+                        M = est,
+                        t2 = t2,
+                        tail = "above",
+                        dat = Data,
+                        yi.name = "yif",
+                        vi.name = "vif")
+  
+  Phat0.2 = prop_stronger(q = r_to_z(.2),
+                        M = est,
+                        t2 = t2,
+                        tail = "above",
+                        dat = Data,
+                        yi.name = "yif",
+                        vi.name = "vif")
   
   
-  Phat.df = do.call( rbind, 
-                     Phat.l )
-  Phat.df$string = paste( round( 100*Phat.df$Est,
-                                 digits = 0 ),
-                          format_CI( 100*Phat.df$lo, 
-                                     100*Phat.df$hi,
-                                     digits = 0 ),
-                          sep = " " )
-  # omit CI if it was NA
-  Phat.df$string[ is.na(Phat.df$lo) ] = round( 100*Phat.df$Est[ is.na(Phat.df$lo) ],
-                                               digits = 0 )
-  # if t2 = 0 exactly: 
 } else {
-  
-  # just check if Phat = 0 or 1 but omit CI
-  Phat.df = data.frame( Est = 100 * (c(est) > ql),
-                        lo = rep( NA, length(ql) ),
-                        hi = rep( NA, length(ql) ),
-                        boot.note = rep( "t2 = 0 exactly, so no Phat CI", length(ql) ) )
-  
-  Phat.df$string = Phat.df$Est # omit the CI
-  # Phat.df$string = paste( Phat.df$Est, 
-  #                         " [NA, NA]", 
-  #                         sep = "")
+  Phat0 = est > 0
+  Phat0.1 = est > r_to_z(.1)
+  Phat0.1 = est > r_to_z(.2)
 }
-  
-  
-  
-Porig
-Psignif.agree
-Phat.df
+
+
+# * sanity check
+# point estimates should agree exactly, but CIs may differ due to bootstrapping
+res$Percent.above.0; round(100*Phat0$est,1); round(100*Phat0$lo,1); round(100*Phat0$hi,1)
+res$Percent.above.0.1; round(100*Phat0.1$est,1); round(100*Phat0.1$lo,1); round(100*Phat0.1$hi,1)
+res$Percent.above.0.2; round(100*Phat0.2$est,1); round(100*Phat0.2$lo,1); round(100*Phat0.2$hi,1)
+
+
+
+# in case we need to debug the function
+# analyze_one_meta( dat = df,  # subset to analyze
+#                   yi.name = "yi.f",  # variable name of point estimate in replications (on Fisher's z scale)
+#                   vi.name = "vi.f", # variable name of variance estimate in replications (on Fisher's z scale)
+#                   meta.name = charlie.meta.name,  # name of meta-analysis/project
+#                   
+#                   ql = ql,  # on Fisher's z scale
+#                   z.to.r = z.to.r,  # should we transform back to r for reporting?
+#                   boot.reps = 2000,
+#                   digits = 2 )
+
+
+
+
