@@ -195,6 +195,6 @@ res$Percent.above.0.2; round(100*Phat0.2$est,1); round(100*Phat0.2$lo,1); round(
 #                   boot.reps = 2000,
 #                   digits = 2 )
 
-
+ 
 
 
