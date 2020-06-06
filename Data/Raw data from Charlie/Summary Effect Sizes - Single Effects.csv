@@ -10,11 +10,11 @@ Albarracin S7,University of Texas at Dallas,RP:P,eta sq,0.001783373,174,yes,Alba
 Crosby,Edinburgh,RP:P,pseudo R2,0.028,43,no,Crosby RP:P
 Crosby,Occidental,RP:P,pseudo R2,0.04,47,no,Crosby RP:P
 Crosby,Stirling,RP:P,pseudo R2,0.007,50,no,Crosby RP:P
-Forster,University of Presov,RP:P,rp,0.07,97,no,Forster RP:P
+Forster,University of Presov,RP:P,rp,0.07,97,yes,Forster RP:P
 Forster,Nova Southeastern University,RP:P,rp,0.06,97,no,Forster RP:P
 Forster,Kozminski University,RP:P,rp,0.05,77,no,Forster RP:P
 Forster,University of Kassel,RP:P,rp,0.07,110,no,Forster RP:P
-Forster,Hofstra University,RP:P,rp,0.1,56,no,Forster RP:P
+Forster,Hofstra University,RP:P,rp,0.1,56,yes,Forster RP:P
 Forster,Universidade de Fortaleza,RP:P,rp,0.08,111,no,Forster RP:P
 Forster,Fort Lewis College,RP:P,rp,0.04,119,no,Forster RP:P
 Forster,Otto Friedrich Universitaet Bamberg,RP:P,rp,0.07,69,no,Forster RP:P
@@ -64,10 +64,10 @@ Crosby,Edinburgh,Revised,pseudo R2,0.005,45,no,Crosby Revised
 Crosby,Occidental,Revised,pseudo R2,0.01,41,no,Crosby Revised
 Crosby,Stirling,Revised,pseudo R2,0.052,50,no,Crosby Revised
 Forster,University of Presov,Revised,rp,0.2,100,no,Forster Revised
-Forster,Nova Southeastern University,Revised,rp,0.14,81,no,Forster Revised
-Forster,Kozminski University,Revised,rp,0.03,95,no,Forster Revised
+Forster,Nova Southeastern University,Revised,rp,0.14,81,yes,Forster Revised
+Forster,Kozminski University,Revised,rp,0.03,95,yes,Forster Revised
 Forster,University of Kassel,Revised,rp,0.09,120,no,Forster Revised
-Forster,Hofstra University,Revised,rp,0.22,47,no,Forster Revised
+Forster,Hofstra University,Revised,rp,0.22,47,yes,Forster Revised
 Forster,Universidade de Fortaleza,Revised,rp,0.06,97,no,Forster Revised
 Forster,Fort Lewis College,Revised,rp,0.11,111,no,Forster Revised
 Forster,Otto Friedrich Universitaet Bamberg,Revised,rp,0.15,69,no,Forster Revised

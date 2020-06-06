@@ -55,8 +55,6 @@ Reverse$Value<-Reverse$Value*-1
 Data<-rbind(NoReverse,Reverse)
 
 # calculate Fisher's z
-# ***CAUGHT ERROR 2020-5-25:
-# CE had "COR" instead of "ZCOR": Data = escalc(ri=Value,ni=N,data=Data,measure="COR",vtype="LS")
 Data = escalc(ri=Value,ni=N,data=Data,measure="ZCOR",vtype="LS")
 names(Data)[ names(Data) == "yi" ] = "yi.f"
 names(Data)[ names(Data) == "vi" ] = "vi.f"
